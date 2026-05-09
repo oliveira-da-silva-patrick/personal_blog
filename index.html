@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>my log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Figtree:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:        #f5f2ed;
+  --ink:       #1a1814;
+  --ink-soft:  #4a4540;
+  --ink-muted: #9a9590;
+  --rule:      #dedad4;
+  --films-hue: #c0392b;
+  --music-hue: #1a6b4a;
+  --sel-bg:    #1a1814;
+  --sel-fg:    #f5f2ed;
+  --radius:    4px;
+  --ff-d: 'Cormorant Garamond', Georgia, serif;
+  --ff-b: 'Figtree', sans-serif;
+  --ff-m: 'DM Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--ff-b);font-size:15px;line-height:1.65;min-height:100vh}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
+
+body::after{
+  content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+
+.site{max-width:1120px;margin:0 auto;padding:0 28px}
+
+/* MASTHEAD */
+.masthead{
+  border-bottom:2px solid var(--ink);
+  padding:28px 0 18px;
+  display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.logo{font-family:var(--ff-d);font-size:clamp(2.6rem,6vw,4.4rem);font-weight:700;line-height:1;letter-spacing:-0.03em}
+.logo em{font-style:italic;font-weight:300}
+.tagline{font-family:var(--ff-m);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-muted);margin-top:6px}
+.masthead-right{font-family:var(--ff-m);font-size:10px;text-transform:uppercase;letter-spacing:0.14em;color:var(--ink-muted);text-align:right;line-height:1.8}
+.masthead-right strong{color:var(--ink);font-weight:500}
+
+/* INTRO */
+.intro-band{
+  border-bottom:1px solid var(--rule);
+  padding:36px 0 34px;
+  display:grid;grid-template-columns:1fr 2px 1fr;gap:0 40px;align-items:start;
+}
+.intro-divider{background:var(--rule);align-self:stretch}
+.intro-label{font-family:var(--ff-m);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:10px}
+.intro-heading{font-family:var(--ff-d);font-size:clamp(1.3rem,3vw,1.9rem);font-weight:600;line-height:1.25;margin-bottom:12px}
+.intro-body{font-size:14px;color:var(--ink-soft);line-height:1.75}
+.intro-body p+p{margin-top:10px}
+
+/* NAV */
+.section-nav{display:flex;gap:0;border-bottom:1px solid var(--rule)}
+.snav-btn{padding:14px 22px;font-family:var(--ff-m);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s}
+.snav-btn:hover{color:var(--ink)}
+.snav-btn.active-f{color:var(--films-hue);border-bottom-color:var(--films-hue)}
+.snav-btn.active-m{color:var(--music-hue);border-bottom-color:var(--music-hue)}
+.snav-btn.active-a{color:var(--ink);border-bottom-color:var(--ink)}
+
+/* CONTENT SPLIT */
+.content-area{display:grid;grid-template-columns:1fr;min-height:70vh}
+.content-area.split{grid-template-columns:55fr 45fr}
+
+/* LIST PANEL */
+.list-panel{border-right:1px solid var(--rule)}
+.section-block{display:none}
+.section-block.visible{display:block}
+.section-label{padding:20px 24px 4px;font-family:var(--ff-m);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-muted)}
+
+/* ENTRY ROW */
+.entry-row{
+  display:grid;grid-template-columns:56px 1fr auto;gap:0 16px;align-items:center;
+  padding:14px 24px;border-bottom:1px solid var(--rule);cursor:pointer;transition:background .15s;
+}
+.entry-row:hover{background:rgba(0,0,0,.03)}
+.entry-row.selected{background:var(--sel-bg);color:var(--sel-fg)}
+.entry-row.selected .entry-sub,.entry-row.selected .entry-badge{color:rgba(255,255,255,.45)}
+.entry-thumb{width:56px;height:84px;object-fit:cover;border-radius:2px;background:var(--rule);flex-shrink:0}
+.entry-thumb.sq{height:56px}
+.entry-ph{width:56px;height:84px;background:var(--rule);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.entry-ph.sq{height:56px}
+.entry-info{min-width:0}
+.entry-title{font-family:var(--ff-d);font-size:1.1rem;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry-sub{font-size:12px;color:var(--ink-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry-stars{font-size:12px;margin-top:5px;letter-spacing:1px}
+.sf{color:var(--films-hue)}.sm{color:var(--music-hue)}
+.entry-row.selected .sf,.entry-row.selected .sm{color:rgba(255,255,255,.65)}
+.entry-badge{font-family:var(--ff-m);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);flex-shrink:0}
+
+/* DETAIL PANEL */
+.detail-panel{display:none;position:sticky;top:0;height:100vh;overflow-y:auto;padding:32px 32px 48px;animation:slideIn .3s ease}
+.detail-panel.open{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+.detail-back{display:none;margin-bottom:20px;font-family:var(--ff-m);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-muted);align-items:center;gap:6px}
+.detail-poster{width:100%;max-width:200px;aspect-ratio:2/3;object-fit:cover;border-radius:3px;margin-bottom:20px;box-shadow:6px 6px 0 var(--rule)}
+.detail-poster.sq{aspect-ratio:1/1;max-width:180px}
+.detail-ph{width:180px;height:180px;background:var(--rule);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:20px}
+.detail-kicker{font-family:var(--ff-m);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:8px}
+.kf{color:var(--films-hue)}.km{color:var(--music-hue)}
+.detail-title{font-family:var(--ff-d);font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:4px}
+.detail-meta{font-size:13px;color:var(--ink-muted);margin-bottom:16px}
+.detail-stars{font-size:16px;letter-spacing:2px;margin-bottom:20px}
+.detail-rule{height:1px;background:var(--rule);margin:20px 0}
+.review-label{font-family:var(--ff-m);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:10px}
+.review-body{font-family:var(--ff-d);font-size:1.1rem;font-weight:300;font-style:italic;line-height:1.8;color:var(--ink-soft)}
+.review-body p+p{margin-top:14px}
+.detail-links{margin-top:24px;display:flex;flex-direction:column;gap:8px}
+.detail-link{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff-m);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);padding:9px 14px;border:1px solid var(--rule);border-radius:var(--radius);transition:color .15s,border-color .15s}
+.detail-link:hover{color:var(--ink);border-color:var(--ink)}
+.dli{font-size:14px}
+
+/* EMPTY STATE */
+.detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;text-align:center;color:var(--ink-muted)}
+.de-glyph{font-family:var(--ff-d);font-size:5rem;font-style:italic;line-height:1;opacity:.12;margin-bottom:16px}
+.de-text{font-size:13px;font-family:var(--ff-m);letter-spacing:0.1em;text-transform:uppercase}
+
+/* FOOTER */
+footer{border-top:1px solid var(--rule);padding:18px 0;font-family:var(--ff-m);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .intro-band{grid-template-columns:1fr;gap:24px}
+  .intro-divider{display:none}
+  .masthead-right{text-align:left}
+  .content-area.split{grid-template-columns:1fr}
+  .content-area.split .list-panel{display:none}
+  .detail-back{display:flex}
+  .detail-panel{padding:20px}
+  .list-panel{border-right:none}
+  .entry-row{padding:12px 16px}
+  .site{padding:0 16px}
+}
+@media(max-width:480px){.snav-btn{padding:12px 14px;font-size:9px}}
+</style>
+</head>
+<body>
+<div class="site">
+
+<header class="masthead">
+  <div>
+    <div class="logo">my<em>.</em>log</div>
+    <div class="tagline">A bimonthly record of what I've been watching &amp; listening to</div>
+  </div>
+  <div class="masthead-right">
+    <strong id="period-label">—</strong><br>
+    Vol. I &nbsp;·&nbsp; Personal Edition
+  </div>
+</header>
+
+<section class="intro-band">
+  <div>
+    <div class="intro-label">This edition</div>
+    <div class="intro-heading">On slow cinema<br>and songs that linger</div>
+    <div class="intro-body">
+      <p>Every two months I put together a short list of the films, shows, and records that genuinely moved me — not necessarily the most acclaimed, just the ones I keep thinking about.</p>
+      <p>This edition leans heavy on atmosphere: quiet films where nothing much happens and everything matters, and albums made to be heard start-to-finish with the lights low.</p>
+    </div>
+  </div>
+  <div class="intro-divider"></div>
+  <div>
+    <div class="intro-label">How to use this</div>
+    <div class="intro-heading">Pick anything<br>to read my take</div>
+    <div class="intro-body">
+      <p>Select any title and my full review appears alongside it — with links to the relevant databases, trailers, and streaming info so you can dig deeper.</p>
+      <p>Ratings are purely personal. One star means I wouldn't recommend it to you. Five stars means I already have.</p>
+    </div>
+  </div>
+</section>
+
+<nav class="section-nav">
+  <button class="snav-btn active-a" data-sec="all">All</button>
+  <button class="snav-btn" data-sec="films">Films &amp; Shows</button>
+  <button class="snav-btn" data-sec="music">Music</button>
+</nav>
+
+<div class="content-area" id="content-area">
+  <div class="list-panel" id="list-panel">
+
+    <div class="section-block visible" id="block-films">
+      <div class="section-label">Films &amp; Shows</div>
+
+      <div class="entry-row" data-id="f1">
+        <img class="entry-thumb" src="https://image.tmdb.org/t/p/w342/3bhkrj58Vtu7enYsLegHnDcdh0E.jpg" alt="Past Lives" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="entry-ph" style="display:none">🎬</div>
+        <div class="entry-info">
+          <div class="entry-title">Past Lives</div>
+          <div class="entry-sub">2023 · A24 · Celine Song</div>
+          <div class="entry-stars sf">★★★★★</div>
+        </div>
+        <div class="entry-badge">Film</div>
+      </div>
+
+      <div class="entry-row" data-id="f2">
+        <img class="entry-thumb" src="https://image.tmdb.org/t/p/w342/d5NXSklXo0qyIYkgV94XAgMIckC.jpg" alt="Dune Part Two" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="entry-ph" style="display:none">🎬</div>
+        <div class="entry-info">
+          <div class="entry-title">Dune: Part Two</div>
+          <div class="entry-sub">2024 · Legendary · Denis Villeneuve</div>
+          <div class="entry-stars sf">★★★★☆</div>
+        </div>
+        <div class="entry-badge">Film</div>
+      </div>
+
+      <div class="entry-row" data-id="f3">
+        <img class="entry-thumb" src="https://image.tmdb.org/t/p/w342/sHFL7EBbKFpVBRidnr3LlRlS3mq.jpg" alt="The Bear" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="entry-ph" style="display:none">📺</div>
+        <div class="entry-info">
+          <div class="entry-title">The Bear</div>
+          <div class="entry-sub">2022–24 · FX · Seasons 1–3</div>
+          <div class="entry-stars sf">★★★★★</div>
+        </div>
+        <div class="entry-badge">Series</div>
+      </div>
+
+      <div class="entry-row" data-id="f4">
+        <img class="entry-thumb" src="https://image.tmdb.org/t/p/w342/wTnV3PCVW5O92JMrFvvrRcV39RU.jpg" alt="All of Us Strangers" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="entry-ph" style="display:none">🎬</div>
+        <div class="entry-info">
+          <div class="entry-title">All of Us Strangers</div>
+          <div class="entry-sub">2023 · Searchlight · Andrew Haigh</div>
+          <div class="entry-stars sf">★★★★★</div>
+        </div>
+        <div class="entry-badge">Film</div>
+      </div>
+    </div>
+
+    <div class="section-block visible" id="block-music">
+      <div class="section-label">Music</div>
+
+      <div class="entry-row" data-id="m1">
+        <img class="entry-thumb sq" src="https://coverartarchive.org/release-group/7c12e44c-f0df-4ee4-b06b-27e3e98e46b3/front-250" alt="Brat" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="entry-ph sq" style="display:none">🎵</div>
+        <div class="entry-info">
+          <div class="entry-title">Brat</div>
+          <div class="entry-sub">Charli XCX · 2024</div>
+          <div class="entry-stars sm">★★★★★</div>
+        </div>
+        <div class="entry-badge">Album</div>
+      </div>
+
+      <div class="entry-row" data-id="m2">
+        <img class="entry-thumb sq" src="https://coverartarchive.org/release-group/f4e83f5a-0fa8-4592-8c61-7699c4c72f96/front-250" alt="Bright Future" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="entry-ph sq" style="display:none">🎵</div>
+        <div class="entry-info">
+          <div class="entry-title">Bright Future</div>
+          <div class="entry-sub">Adrianne Lenker · 2024</div>
+          <div class="entry-stars sm">★★★★★</div>
+        </div>
+        <div class="entry-badge">Album</div>
+      </div>
+
+      <div class="entry-row" data-id="m3">
+        <img class="entry-thumb sq" src="https://coverartarchive.org/release-group/9b5b9e77-3a22-4fc3-a4c5-2c4e8b97512e/front-250" alt="Manning Fireworks" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="entry-ph sq" style="display:none">🎵</div>
+        <div class="entry-info">
+          <div class="entry-title">Manning Fireworks</div>
+          <div class="entry-sub">MJ Lenderman · 2024</div>
+          <div class="entry-stars sm">★★★★☆</div>
+        </div>
+        <div class="entry-badge">Album</div>
+      </div>
+
+      <div class="entry-row" data-id="m4">
+        <img class="entry-thumb sq" src="https://coverartarchive.org/release-group/0d4be048-d22e-4f67-8580-4b16d8d3a9b2/front-250" alt="Short n Sweet" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="entry-ph sq" style="display:none">🎵</div>
+        <div class="entry-info">
+          <div class="entry-title">Short n' Sweet</div>
+          <div class="entry-sub">Sabrina Carpenter · 2024</div>
+          <div class="entry-stars sm">★★★★☆</div>
+        </div>
+        <div class="entry-badge">Album</div>
+      </div>
+    </div>
+
+  </div><!-- /list-panel -->
+
+  <div class="detail-panel" id="detail-panel">
+    <button class="detail-back" id="detail-back">← Back to list</button>
+    <div id="detail-content">
+      <div class="detail-empty">
+        <div class="de-glyph">→</div>
+        <div class="de-text">Select a title to read the review</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-area -->
+
+<footer class="site">
+  <span>Film data · <strong>TMDB</strong></span>
+  <span>Music data · <strong>MusicBrainz</strong> &amp; <strong>Cover Art Archive</strong></span>
+  <span id="footer-period"></span>
+</footer>
+
+</div><!-- /site -->
+
+<script>
+/* PERIOD */
+(function(){
+  const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now=new Date(),m=now.getMonth(),y=now.getFullYear();
+  const s=mo[m%2===0?m:m-1]+'–'+mo[m%2===0?m+1:m]+' '+y;
+  document.getElementById('period-label').textContent=s;
+  document.getElementById('footer-period').textContent=s;
+})();
+
+/* DATA */
+const DATA={
+  f1:{
+    klass:'f',badge:'Film',
+    title:'Past Lives',
+    meta:'2023 · Directed by Celine Song · A24',
+    stars:'★★★★★',
+    poster:'https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsLegHnDcdh0E.jpg',
+    review:'There are films you admire and films that just stay inside you. <em>Past Lives</em> is the second kind. Celine Song\'s debut is about what Koreans call in-yeon — the idea that every encounter in a previous life leaves a thread between people — and she treats that concept not as magic realism but as the quiet ache of an adult life actually lived.\n\nI watched this alone on a Tuesday and sat with the credits rolling for longer than I care to admit. The final scene is so precisely observed that it almost feels intrusive to watch. The cinematography keeps New York looking both enormous and intimate, which is exactly right for a film about distance.\n\nIf you\'ve ever wondered about a road not taken — and who hasn\'t — this film will sit with you for days.',
+    links:[
+      {icon:'🎬',label:'TMDB page',url:'https://www.themoviedb.org/movie/955916-past-lives'},
+      {icon:'▶',label:'Trailer on YouTube',url:'https://www.youtube.com/results?search_query=Past+Lives+2023+trailer'},
+      {icon:'🎞',label:'Letterboxd',url:'https://letterboxd.com/film/past-lives-2023/'},
+    ]
+  },
+  f2:{
+    klass:'f',badge:'Film',
+    title:'Dune: Part Two',
+    meta:'2024 · Directed by Denis Villeneuve · Legendary Entertainment',
+    stars:'★★★★☆',
+    poster:'https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg',
+    review:'I was lukewarm on Part One. I\'m converted by Part Two. Villeneuve has made a blockbuster that actually earns its scale — the Harkonnen arena sequence shot in monochrome is one of the most visually audacious things I\'ve seen in a multiplex in years.\n\nZendaya finally gets real screen time and uses it well. The film is unafraid to make Paul Atreides unlikeable, which is the correct reading of Herbert. My only hesitation is that some philosophical weight gets compressed in ways that might frustrate anyone who came to the novel first.\n\nStill: see it on the biggest screen you can find. Greig Fraser\'s cinematography was born for IMAX.',
+    links:[
+      {icon:'🎬',label:'TMDB page',url:'https://www.themoviedb.org/movie/693134-dune-part-two'},
+      {icon:'▶',label:'Trailer on YouTube',url:'https://www.youtube.com/results?search_query=Dune+Part+Two+2024+trailer'},
+      {icon:'🎞',label:'Letterboxd',url:'https://letterboxd.com/film/dune-part-two/'},
+    ]
+  },
+  f3:{
+    klass:'f',badge:'Series',
+    title:'The Bear',
+    meta:'2022–2024 · FX on Hulu · Seasons 1–3',
+    stars:'★★★★★',
+    poster:'https://image.tmdb.org/t/p/w500/sHFL7EBbKFpVBRidnr3LlRlS3mq.jpg',
+    review:'There\'s a single-take episode in Season 2 — you\'ll know the one — that I\'ve rewatched four times. It\'s the tightest piece of television I\'ve seen in years. <em>The Bear</em> understands that a kitchen is a pressure cooker for everything that\'s broken in a person, and it never lets you look away.\n\nSeason 1 is breathless. Season 2 is heartbreaking. Season 3 gets quieter, more interior — some people resented that, I loved it. The show trusts its characters enough to just let them exist in a room for a while.\n\nJeremy Allen White carries it all on a performance that manages to be simultaneously explosive and completely inward. Essential viewing.',
+    links:[
+      {icon:'📺',label:'TMDB page',url:'https://www.themoviedb.org/tv/136315-the-bear'},
+      {icon:'▶',label:'Trailer on YouTube',url:'https://www.youtube.com/results?search_query=The+Bear+FX+trailer'},
+      {icon:'🎞',label:'Letterboxd',url:'https://letterboxd.com/film/the-bear/'},
+    ]
+  },
+  f4:{
+    klass:'f',badge:'Film',
+    title:'All of Us Strangers',
+    meta:'2023 · Directed by Andrew Haigh · Searchlight Pictures',
+    stars:'★★★★★',
+    poster:'https://image.tmdb.org/t/p/w500/wTnV3PCVW5O92JMrFvvrRcV39RU.jpg',
+    review:'Andrew Haigh is constitutionally incapable of making something that doesn\'t sting. <em>All of Us Strangers</em> is his most overtly fantastical film and also his most devastating — a ghost story that isn\'t really about ghosts at all, but about the conversations we never got to have.\n\nAndrew Scott is extraordinary throughout, but the scene where he finally talks to his parents about who he is — the thing he never got the chance to do — undid me completely. Haigh doesn\'t play it for catharsis. He plays it for the bittersweet, complicated relief of being seen too late.\n\nThe Frankie Goes to Hollywood needle drop near the end is one of the great uses of pre-existing music I can remember.',
+    links:[
+      {icon:'🎬',label:'TMDB page',url:'https://www.themoviedb.org/movie/1010818-all-of-us-strangers'},
+      {icon:'▶',label:'Trailer on YouTube',url:'https://www.youtube.com/results?search_query=All+of+Us+Strangers+trailer'},
+      {icon:'🎞',label:'Letterboxd',url:'https://letterboxd.com/film/all-of-us-strangers/'},
+    ]
+  },
+  m1:{
+    klass:'m',badge:'Album',sq:true,
+    title:'Brat',
+    meta:'Charli XCX · 2024 · Atlantic Records',
+    stars:'★★★★★',
+    poster:'https://coverartarchive.org/release-group/7c12e44c-f0df-4ee4-b06b-27e3e98e46b3/front-500',
+    review:'The album of the year, full stop. <em>Brat</em> is Charli doing exactly what she\'s always done — making club music that sounds like an emotion you don\'t have a word for — but here it coheres into something that feels genuinely important.\n\nThe production is abrasive in the best way: cheap-sounding textures deployed with real craft, hooks that take three listens to land and then never leave. What surprised me most is how emotionally direct it is for a dance record. <em>So I</em> is one of the most candid songs about friendship anxiety I\'ve heard.\n\nIt\'s rare that a pop album is both this sonically committed and this emotionally open. I\'ve listened to it end-to-end more times than I can count.',
+    links:[
+      {icon:'🎵',label:'MusicBrainz',url:'https://musicbrainz.org/release-group/7c12e44c-f0df-4ee4-b06b-27e3e98e46b3'},
+      {icon:'▶',label:'Listen on Spotify',url:'https://open.spotify.com/search/Charli%20XCX%20Brat'},
+      {icon:'📻',label:'Last.fm page',url:'https://www.last.fm/music/Charli+XCX/BRAT'},
+    ]
+  },
+  m2:{
+    klass:'m',badge:'Album',sq:true,
+    title:'Bright Future',
+    meta:'Adrianne Lenker · 2024 · 4AD',
+    stars:'★★★★★',
+    poster:'https://coverartarchive.org/release-group/f4e83f5a-0fa8-4592-8c61-7699c4c72f96/front-500',
+    review:'Adrianne Lenker makes records that sound like they were written in one breath and recorded in another. <em>Bright Future</em> is her most expansive yet — there are strings, a full band on some tracks — but it never loses the intimacy that makes her work feel like finding a letter in someone else\'s handwriting.\n\nThe title track is a masterclass in negative space. The final sequence of <em>Ruined</em> into <em>Candleflame</em> into <em>Evol</em> is the best consecutive run of songs I heard this year.\n\nSome albums are good company. This one is the kind you put on when you need someone to have already understood.',
+    links:[
+      {icon:'🎵',label:'MusicBrainz',url:'https://musicbrainz.org/release-group/f4e83f5a-0fa8-4592-8c61-7699c4c72f96'},
+      {icon:'▶',label:'Listen on Spotify',url:'https://open.spotify.com/search/Adrianne+Lenker+Bright+Future'},
+      {icon:'📻',label:'Last.fm page',url:'https://www.last.fm/music/Adrianne+Lenker/Bright+Future'},
+    ]
+  },
+  m3:{
+    klass:'m',badge:'Album',sq:true,
+    title:'Manning Fireworks',
+    meta:'MJ Lenderman · 2024 · Anti-',
+    stars:'★★★★☆',
+    poster:'https://coverartarchive.org/release-group/9b5b9e77-3a22-4fc3-a4c5-2c4e8b97512e/front-500',
+    review:'MJ Lenderman writes guitar rock that sounds like it\'s been left out in the sun — slightly warped, a little hazy, but sturdy in a way you don\'t notice until you\'ve been listening for a week and it\'s still there.\n\n<em>Manning Fireworks</em> is his proper breakthrough and it doesn\'t betray a single thing. The songs sprawl when they need to; they snap shut when they need to. <em>Wristwatch</em> is probably my single of the year — three minutes of wounded American indie that manages to be funny and devastating simultaneously.\n\nIf you grew up on Pavement or Guided by Voices, this will feel like coming home.',
+    links:[
+      {icon:'🎵',label:'MusicBrainz',url:'https://musicbrainz.org/artist/b1e2bc8f-5c9e-49df-8cd4-b0c9c14df11c'},
+      {icon:'▶',label:'Listen on Spotify',url:'https://open.spotify.com/search/MJ+Lenderman+Manning+Fireworks'},
+      {icon:'📻',label:'Last.fm page',url:'https://www.last.fm/music/MJ+Lenderman'},
+    ]
+  },
+  m4:{
+    klass:'m',badge:'Album',sq:true,
+    title:"Short n' Sweet",
+    meta:'Sabrina Carpenter · 2024 · Island Records',
+    stars:'★★★★☆',
+    poster:'https://coverartarchive.org/release-group/0d4be048-d22e-4f67-8580-4b16d8d3a9b2/front-500',
+    review:'I came to this record skeptically and left a convert. Sabrina Carpenter is doing something genuinely crafted here — the production is indebted to late-70s AM radio and Burt Bacharach without being pastiche, and her voice is deployed with real care rather than just volume.\n\n<em>Espresso</em> is the obvious standout but <em>Dumb & Poetic</em> is actually the better song. The sequencing is unusually thoughtful for a pop record; it peaks early and then recedes into something more reflective.\n\nThis is exactly the kind of pop album critics tend to ignore and then "rediscover" in ten years. I\'d rather enjoy it now.',
+    links:[
+      {icon:'🎵',label:'MusicBrainz',url:'https://musicbrainz.org/artist/8b1c2d3e-4f56-7890-abcd-ef1234567890'},
+      {icon:'▶',label:'Listen on Spotify',url:'https://open.spotify.com/search/Sabrina+Carpenter+Short+n+Sweet'},
+      {icon:'📻',label:'Last.fm page',url:'https://www.last.fm/music/Sabrina+Carpenter/Short+n%27+Sweet'},
+    ]
+  },
+};
+
+/* NAV */
+document.querySelectorAll('.snav-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.snav-btn').forEach(b=>b.className='snav-btn');
+    const s=btn.dataset.sec;
+    if(s==='all')  {btn.className='snav-btn active-a';show('films',1);show('music',1);}
+    if(s==='films'){btn.className='snav-btn active-f';show('films',1);show('music',0);}
+    if(s==='music'){btn.className='snav-btn active-m';show('films',0);show('music',1);}
+    closeDetail();
+  });
+});
+function show(name,v){document.getElementById('block-'+name).classList.toggle('visible',!!v)}
+
+/* ROWS */
+let sel=null;
+document.querySelectorAll('.entry-row').forEach(row=>{
+  row.addEventListener('click',()=>{
+    const id=row.dataset.id;
+    if(sel===id){closeDetail();return}
+    document.querySelectorAll('.entry-row').forEach(r=>r.classList.remove('selected'));
+    row.classList.add('selected');
+    sel=id;
+    renderDetail(DATA[id]);
+  });
+});
+
+function renderDetail(e){
+  const poster=e.sq
+    ?`<img class="detail-poster sq" src="${e.poster}" alt="${e.title}" onerror="this.style.display='none'"/>`
+    :`<img class="detail-poster" src="${e.poster}" alt="${e.title}" onerror="this.style.display='none'"/>`;
+  const review=e.review.split('\n\n').map(p=>`<p>${p}</p>`).join('');
+  const links=e.links.map(l=>`<a class="detail-link" href="${l.url}" target="_blank" rel="noopener"><span class="dli">${l.icon}</span>${l.label}</a>`).join('');
+  document.getElementById('detail-content').innerHTML=`
+    ${poster}
+    <div class="detail-kicker k${e.klass}">${e.badge}</div>
+    <div class="detail-title">${e.title}</div>
+    <div class="detail-meta">${e.meta}</div>
+    <div class="detail-stars k${e.klass}">${e.stars}</div>
+    <div class="detail-rule"></div>
+    <div class="review-label">My review</div>
+    <div class="review-body">${review}</div>
+    <div class="detail-links">${links}</div>`;
+  const panel=document.getElementById('detail-panel');
+  panel.classList.add('open');
+  panel.scrollTop=0;
+  document.getElementById('content-area').classList.add('split');
+}
+
+function closeDetail(){
+  sel=null;
+  document.querySelectorAll('.entry-row').forEach(r=>r.classList.remove('selected'));
+  document.getElementById('detail-panel').classList.remove('open');
+  document.getElementById('content-area').classList.remove('split');
+  document.getElementById('detail-content').innerHTML=`<div class="detail-empty"><div class="de-glyph">→</div><div class="de-text">Select a title to read the review</div></div>`;
+}
+
+document.getElementById('detail-back').addEventListener('click',closeDetail);
+</script>
+</body>
+</html>
